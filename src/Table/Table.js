@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTable } from "react-table";
-
+import './TableStyle.css'
 const tableData = [
 	{
 		first: 7,
@@ -20,21 +20,20 @@ const tableData = [
 		first: 1,
 		second: 2,
 		third: 3,
-		fourth: '+'
+		fourth: '-'
 
 	},
 	{
 		first: 0,
-		second: '=',
-		third: '.',
-		fourth: '-'
+		second: 'C',
+		third: '=',
+		fourth: '+'
 
 	}
 ]
 
 export const Table = () => {
 	const data = tableData;
-	let answerValue = 0
 	const columns = useMemo(() => [{
 		Header: 'Header',
 		hideHeader: false,
@@ -58,79 +57,79 @@ export const Table = () => {
 		]
 	}], []);
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
-
-	let operatorClicked = false
-	let history = false
-	let setOperator = null
+	let answerValue = 0
 	let secondValue = 0
-	const answerText = document.getElementById('answerText');
+	let setOperator = null
+	const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+	const operators = ['/', '*', '-', '+']
+	const answerText = document.getElementById('answerText')
+	let calculated = false
 	function clear() {
 		answerValue = 0
 		secondValue = 0
-		operatorClicked = false
-		history = false
+		setOperator = null
+		calculated = false
 		answerText.innerHTML = answerValue
+		console.log("cleared")
 	}
+
+	function calculateOperation() {
+		switch (setOperator) {
+			case '/':
+				answerValue = answerValue / secondValue;
+				break;
+			case '*':
+				answerValue = answerValue * secondValue;
+				break;
+			case '-':
+				answerValue = answerValue - secondValue;
+				break;
+			case '+':
+				answerValue = answerValue + secondValue;
+				break;
+
+			default:
+				break;
+		}
+	}
+
 	function calculate(cellValue) {
-		const operators = ['/', '*', '-', '+']
-		const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-		console.log("Pushed: " + cellValue)
-		console.log('Answer= ' + answerValue)
-		console.log('Second: ' + secondValue)
 		if (numbers.includes(cellValue)) {
-			if (history) {
-				clear()
-			} else {
-				if (!operatorClicked) {
-					answerValue = (10 * answerValue) + cellValue
-				} else {
-					secondValue = (10 * secondValue) + cellValue
-				}
+			if (calculated) {
+				answerValue = 0
+				secondValue = 0
+				calculated = false
 			}
+			if (setOperator) {
+				secondValue = secondValue * 10 + cellValue
+				console.log("second: " + secondValue)
+			} else {
+				answerValue = answerValue * 10 + cellValue
+				console.log("answer: " + answerValue)
+			}
+
 		} else if (operators.includes(cellValue)) {
-			history = false
-			operatorClicked = true
-			if (secondValue !== 0) {
+			if (!calculated) {
 				calculateOperation()
 			}
+			calculated = false
 			setOperator = cellValue
-
+			secondValue = 0
+			console.log('pressed operator: ' + cellValue)
 		} else if (cellValue === '=') {
-			history = true
 			calculateOperation()
-			answerText.innerHTML = answerValue
-			setOperator = null
-			operatorClicked = false
+			calculated = true
+			console.log("pressed equals")
+		} else if (cellValue === 'C') {
+			clear()
 		}
-		function calculateOperation() {
-			switch (setOperator) {
-				case '+':
-					answerValue = answerValue + secondValue
-					break;
 
-				case '-':
-					answerValue = answerValue - secondValue
-					break;
-
-				case '*':
-					answerValue = answerValue * secondValue
-					break;
-
-				case '/':
-					answerValue = answerValue / secondValue
-					break;
-
-				default:
-					break;
-			}
-		}
 		answerText.innerHTML = answerValue
 	}
 
-	return (<>
-		<span id="answerText"></span>
-		<button onClick={() => { clear() }}>Clear</button>
-		<table {...getTableProps}>
+	return (<div className="container">
+		<p id="answerText" className="value">0</p>
+		<table {...getTableProps} className="calculator">
 			<thead>
 				{headerGroups.map((headerGroup) => (
 					<tr {...headerGroup.getHeaderGroupProps()}>
@@ -139,11 +138,9 @@ export const Table = () => {
 								<th {...column.getHeaderProps()}>
 									{column.render('Header')}
 								</th>);
-						}
-						)}
+						})}
 					</tr>
-				))
-				}
+				))}
 			</thead>
 			<tbody {...getTableBodyProps()}>
 				{rows.map((row) => {
@@ -151,13 +148,19 @@ export const Table = () => {
 					return (
 						<tr {...row.getRowProps()}>
 							{row.cells.map((cell) => {
-
 								return (
-									<td {...cell.getCellProps()}><button onClick={() => { calculate(cell.value) }}>{cell.render('Cell')}</button></td>)
-							})}</tr>)
+									<td  {...cell.getCellProps()}>
+										<button className={cell.column.id + '-' + cell.row.id} onClick={() => { calculate(cell.value) }}>
+											<i>{cell.render('Cell')}</i>
+										</button>
+									</td>)
+							})}
+						</tr>
+					)
 				})}
 			</tbody>
-		</table></>
+		</table>
+	</div>
 	);
 }
 
