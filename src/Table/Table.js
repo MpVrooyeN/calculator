@@ -41,16 +41,16 @@ export const Table = () => {
 	function calculateOperation() {
 		switch (operator) {
 			case '/':
-				answerValue = answerValue / secondValue;
+				setAnswerValue(answerValue / secondValue);
 				break;
 			case '*':
-				answerValue = answerValue * secondValue;
+				setAnswerValue(answerValue * secondValue);
 				break;
 			case '-':
-				answerValue = answerValue - secondValue;
+				setAnswerValue(answerValue - secondValue);
 				break;
 			case '+':
-				answerValue = answerValue + secondValue;
+				setAnswerValue(answerValue + secondValue);
 				break;
 
 			default:
