@@ -2,30 +2,31 @@ import { useMemo, useState } from "react";
 import { useTable } from "react-table";
 import './TableStyle.css'
 const tableData = [
-	{	first: 7,		second: 8,		third: 9,		fourth: '/'	},
-	{	first: 4,		second: 5,		third: 6,		fourth: '*'	},
-	{	first: 1,		second: 2,		third: 3,		fourth: '-'	},
-	{	first: 0,		second: 'C',	third: '=',		fourth: '+'	}]
+	{ first: 7, second: 8, third: 9, fourth: '/' },
+	{ first: 4, second: 5, third: 6, fourth: '*' },
+	{ first: 1, second: 2, third: 3, fourth: '-' },
+	{ first: 0, second: 'C', third: '=', fourth: '+' }]
 
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 const operators = ['/', '*', '-', '+']
+let answerValue = 0
+let secondValue = 0
+let setOperator = null
+let calculated = false
 
 export const Table = () => {
+	const [answerText, setAnswerText] = useState(0)
 	const data = tableData;
 	const columns = useMemo(() => [{
 		Header: 'Header',
 		hideHeader: false,
 		columns: [
-			{	Header: '',	accessor: 'first'},
-			{	Header: '',	accessor: 'second'},
-			{	Header: '',	accessor: 'third'},
-			{	Header: '',	accessor: 'fourth'}]}], []);
+			{ Header: '', accessor: 'first' },
+			{ Header: '', accessor: 'second' },
+			{ Header: '', accessor: 'third' },
+			{ Header: '', accessor: 'fourth' }]
+	}], []);
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
-	let answerValue = 0
-	let secondValue = 0
-	let setOperator = null
-	let calculated = false
-	
 	function clear() {
 		answerValue = 0
 		secondValue = 0
@@ -84,10 +85,12 @@ export const Table = () => {
 		} else if (cellValue === 'C') {
 			clear()
 		}
+		console.log(answerValue)
+		setAnswerText(answerValue)
 	}
 
 	return (<div className="container">
-		<p id="answerText" className="value">{answerValue}</p>
+		<p id="answerText" className="value">{answerText}</p>
 		<table {...getTableProps} className="calculator">
 			<thead>
 				{headerGroups.map((headerGroup) => (
@@ -107,12 +110,11 @@ export const Table = () => {
 					return (
 						<tr {...row.getRowProps()}>
 							{row.cells.map((cell) => {
-								return (
-									<td  {...cell.getCellProps()}>
-										<button className={cell.column.id + '-' + cell.row.id} onClick={() => { calculate(cell.value) }}>
-											<i>{cell.render('Cell')}</i>
-										</button>
-									</td>)
+								return (<td  {...cell.getCellProps()}>
+									<button className={cell.column.id + '-' + cell.row.id} onClick={() => { calculate(cell.value); }}>
+										<i>{cell.render('Cell')}</i>
+									</button>
+								</td>)
 							})}
 						</tr>
 					)
