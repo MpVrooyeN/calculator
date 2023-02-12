@@ -2,35 +2,11 @@ import { useMemo } from "react";
 import { useTable } from "react-table";
 import './TableStyle.css'
 const tableData = [
-	{
-		first: 7,
-		second: 8,
-		third: 9,
-		fourth: '/'
-
-	},
-	{
-		first: 4,
-		second: 5,
-		third: 6,
-		fourth: '*'
-
-	},
-	{
-		first: 1,
-		second: 2,
-		third: 3,
-		fourth: '-'
-
-	},
-	{
-		first: 0,
-		second: 'C',
-		third: '=',
-		fourth: '+'
-
-	}
-]
+	{ first: 7, second: 8, third: 9, fourth: '/' },
+	{ first: 4, second: 5, third: 6, fourth: '*' },
+	{ first: 1, second: 2, third: 3, fourth: '-' },
+	{ first: 0, second: 'C', third: '=', fourth: '+' },
+];
 
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 const operators = ['/', '*', '-', '+']
@@ -41,23 +17,11 @@ export const Table = () => {
 		Header: 'Header',
 		hideHeader: false,
 		columns: [
-			{
-				Header: '',
-				accessor: 'first'
-			},
-			{
-				Header: '',
-				accessor: 'second'
-			},
-			{
-				Header: '',
-				accessor: 'third'
-			},
-			{
-				Header: '',
-				accessor: 'fourth'
-			}
-		]
+			{ Header: '', accessor: 'first' },
+			{ Header: '', accessor: 'second' },
+			{ Header: '', accessor: 'third' },
+			{ Header: '', accessor: 'fourth' },
+		],
 	}], []);
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 	let answerValue = 0
