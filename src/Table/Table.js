@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTable } from "react-table";
 import './TableStyle.css'
 const tableData = [
@@ -24,23 +24,22 @@ export const Table = () => {
 		],
 	}], []);
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
-	let answerValue = 0
-	let secondValue = 0
-	let setOperator = null
-
+	const [answerValue, setAnswerValue] = useState(0)
+	const [secondValue, setSecondValue] = useState(0)
+	const [operator, setOperator] = useState(null)
+	const [calculated, setCalculated] = useState(false)
 	const answerText = document.getElementById('answerText')
-	let calculated = false
+	
 	function clear() {
-		answerValue = 0
-		secondValue = 0
-		setOperator = null
-		calculated = false
+		setAnswerValue(0)
+		setSecondValue(0)
+		setOperator(null)
+		setCalculated(false)
 		answerText.innerHTML = answerValue
-		console.log("cleared")
 	}
 
 	function calculateOperation() {
-		switch (setOperator) {
+		switch (operator) {
 			case '/':
 				answerValue = answerValue / secondValue;
 				break;
@@ -66,7 +65,7 @@ export const Table = () => {
 				secondValue = 0
 				calculated = false
 			}
-			if (setOperator) {
+			if (operator) {
 				secondValue = secondValue * 10 + cellValue
 				console.log("second: " + secondValue)
 			} else {
@@ -89,7 +88,6 @@ export const Table = () => {
 		} else if (cellValue === 'C') {
 			clear()
 		}
-
 		answerText.innerHTML = answerValue
 	}
 
