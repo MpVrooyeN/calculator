@@ -32,6 +32,9 @@ const tableData = [
 	}
 ]
 
+const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+const operators = ['/', '*', '-', '+']
+
 export const Table = () => {
 	const data = tableData;
 	const columns = useMemo(() => [{
@@ -60,8 +63,7 @@ export const Table = () => {
 	let answerValue = 0
 	let secondValue = 0
 	let setOperator = null
-	const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-	const operators = ['/', '*', '-', '+']
+
 	const answerText = document.getElementById('answerText')
 	let calculated = false
 	function clear() {
