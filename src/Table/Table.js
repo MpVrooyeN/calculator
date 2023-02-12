@@ -29,7 +29,7 @@ export const Table = () => {
 	const [operator, setOperator] = useState(null)
 	const [calculated, setCalculated] = useState(false)
 	const answerText = document.getElementById('answerText')
-	
+
 	function clear() {
 		setAnswerValue(0)
 		setSecondValue(0)
@@ -59,7 +59,12 @@ export const Table = () => {
 	}
 
 	function calculate(cellValue) {
-		if (numbers.includes(cellValue)) {
+		let number = numbers.includes(cellValue);
+		let operator = operators.includes(cellValue);
+		let equals = (cellValue === '=');
+		let clear = (cellValue === 'C');
+
+		if (number) {
 			if (calculated) {
 				answerValue = 0
 				secondValue = 0
@@ -73,7 +78,7 @@ export const Table = () => {
 				console.log("answer: " + answerValue)
 			}
 
-		} else if (operators.includes(cellValue)) {
+		} else if (operator) {
 			if (!calculated) {
 				calculateOperation()
 			}
@@ -81,11 +86,11 @@ export const Table = () => {
 			setOperator = cellValue
 			secondValue = 0
 			console.log('pressed operator: ' + cellValue)
-		} else if (cellValue === '=') {
+		} else if (equals) {
 			calculateOperation()
 			calculated = true
 			console.log("pressed equals")
-		} else if (cellValue === 'C') {
+		} else if (clear) {
 			clear()
 		}
 		answerText.innerHTML = answerValue
